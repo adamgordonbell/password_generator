@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="text-3xl font-bold mb-6 text-center">Unnecessary Password Strength Checker</h1>
+    
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+        <p class="font-bold">Warning!</p>
+        <p>This is a silly concept password checker. For demonstration purposes, we store passwords <a href="{{ url_for('view_attempts') }}" class="underline hover:text-yellow-900">unhashed</a>. DO NOT use real passwords!</p>
+    </div>
+    
+    <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-6">
+        <p class="font-bold">What's this about?</p>
+        <p>This password checker implements unnecessarily complex and somewhat arbitrary rules for password evaluation. It's meant to be a humorous take on overly complicated password requirements.</p>
+    </div>
+
+    <form id="password-form" class="mb-6">
+        <input type="password" id="password-input" placeholder="Enter password" class="w-full p-2 border rounded">
+    </form>
+    <div id="strength-score" class="text-xl font-semibold mb-4"></div>
+    <div id="conditions" class="space-y-2"></div>
+    <div id="hint-popup" class="hidden fixed bg-white border border-gray-300 p-2 rounded shadow-lg max-w-xs"></div>
+    
+    <div class="mt-6">
+        <a href="{{ url_for('view_attempts') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">View High Score Board</a>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/password_checker.js') }}"></script>
+{% endblock %}

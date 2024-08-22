@@ -1,0 +1,28 @@
+.condition {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.condition.met {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.condition.unmet {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+#strength-score {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+#password-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+}

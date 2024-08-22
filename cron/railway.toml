@@ -1,0 +1,6 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "python cleanup.py"
+cronSchedule = "55 * * * *"

@@ -1,0 +1,13 @@
+#! /bin/bash
+# shellcheck disable=SC2207 # Arrays are a pain in bash 3
+
+echo "functions assume they are run from repo root"
+
+run_local(){
+    echo "Running locally inside Railway shell"
+    railway shell << EOF
+    source venv/bin/activate
+    PGHOST=junction.proxy.rlwy.net PGPORT=59857 python main.py
+    deactivate
+EOF
+}

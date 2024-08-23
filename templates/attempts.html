@@ -4,27 +4,40 @@
     <h1 class="text-3xl font-bold mb-6 text-center">Password Strength Hall of Fame</h1>
     
     <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h2 class="text-2xl font-bold mb-4">Top 5 Scores in the Last Hour</h2>
         <table class="w-full mb-8">
             <thead>
                 <tr class="bg-gray-200">
                     <th class="px-4 py-2">Rank</th>
                     <th class="px-4 py-2">Password</th>
                     <th class="px-4 py-2">Strength</th>
+                    <th class="px-4 py-2">Timestamp</th>
                 </tr>
             </thead>
             <tbody>
-                {% for attempt in high_scores %}
+                {% for attempt in recent_high_scores %}
                 <tr class="{% if loop.index % 2 == 0 %}bg-gray-100{% endif %}">
                     <td class="border px-4 py-2">{{ loop.index }}</td>
-                    <td class="border px-4 py-2 max-w-xs"><div class="break-all">{{ attempt['password'] }}</div></td>
+                    <td class="border px-4 py-2 max-w-xs">
+                        <div class="break-all">
+                            {% if attempt['password']|length > 200 %}
+                                <span class="password-preview">{{ attempt['password'][:200] }}...</span>
+                                <span class="password-full hidden">{{ attempt['password'] }}</span>
+                                <button class="show-more-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs mt-2">Show More</button>
+                            {% else %}
+                                {{ attempt['password'] }}
+                            {% endif %}
+                        </div>
+                    </td>
                     <td class="border px-4 py-2">{{ attempt['strength'] }}</td>
+                    <td class="border px-4 py-2">{{ attempt['timestamp'] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
         <h2 class="text-2xl font-bold mb-4">Recent Password Attempts</h2>
-        <table class="w-full">
+        <table class="w-full mb-8">
             <thead>
                 <tr class="bg-gray-200">
                     <th class="px-4 py-2">Password</th>
@@ -35,7 +48,49 @@
             <tbody>
                 {% for attempt in attempts %}
                 <tr class="{% if loop.index % 2 == 0 %}bg-gray-100{% endif %}">
-                    <td class="border px-4 py-2 max-w-xs"><div class="break-all">{{ attempt['password'] }}</div></td>
+                    <td class="border px-4 py-2 max-w-xs">
+                        <div class="break-all">
+                            {% if attempt['password']|length > 200 %}
+                                <span class="password-preview">{{ attempt['password'][:200] }}...</span>
+                                <span class="password-full hidden">{{ attempt['password'] }}</span>
+                                <button class="show-more-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs mt-2">Show More</button>
+                            {% else %}
+                                {{ attempt['password'] }}
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="border px-4 py-2">{{ attempt['strength'] }}</td>
+                    <td class="border px-4 py-2">{{ attempt['timestamp'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="text-2xl font-bold mb-4">All-Time High Scores</h2>
+        <table class="w-full">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="px-4 py-2">Rank</th>
+                    <th class="px-4 py-2">Password</th>
+                    <th class="px-4 py-2">Strength</th>
+                    <th class="px-4 py-2">Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in high_scores %}
+                <tr class="{% if loop.index % 2 == 0 %}bg-gray-100{% endif %}">
+                    <td class="border px-4 py-2">{{ loop.index }}</td>
+                    <td class="border px-4 py-2 max-w-xs">
+                        <div class="break-all">
+                            {% if attempt['password']|length > 200 %}
+                                <span class="password-preview">{{ attempt['password'][:200] }}...</span>
+                                <span class="password-full hidden">{{ attempt['password'] }}</span>
+                                <button class="show-more-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs mt-2">Show More</button>
+                            {% else %}
+                                {{ attempt['password'] }}
+                            {% endif %}
+                        </div>
+                    </td>
                     <td class="border px-4 py-2">{{ attempt['strength'] }}</td>
                     <td class="border px-4 py-2">{{ attempt['timestamp'] }}</td>
                 </tr>
@@ -45,4 +100,29 @@
     </div>
     
     <a href="{{ url_for('index') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Back to Checker</a>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const showMoreButtons = document.querySelectorAll('.show-more-btn');
+    showMoreButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const passwordCell = this.closest('td');
+            const preview = passwordCell.querySelector('.password-preview');
+            const full = passwordCell.querySelector('.password-full');
+            
+            if (preview.classList.contains('hidden')) {
+                preview.classList.remove('hidden');
+                full.classList.add('hidden');
+                this.textContent = 'Show More';
+            } else {
+                preview.classList.add('hidden');
+                full.classList.remove('hidden');
+                this.textContent = 'Show Less';
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

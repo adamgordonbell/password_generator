@@ -1,6 +1,7 @@
 import os
 import psycopg2
 from datetime import datetime, timedelta
+import sys
 
 def get_db_connection():
     conn = psycopg2.connect(
@@ -30,6 +31,22 @@ def cleanup_old_attempts():
     conn.close()
     print(f"Cleanup complete. {deleted_count} entries removed.")
 
+def clear_all_attempts():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    
+    cur.execute('DELETE FROM attempts')
+    
+    deleted_count = cur.rowcount
+    conn.commit()
+    cur.close()
+    conn.close()
+    print(f"All attempts cleared. {deleted_count} entries removed.")
+
 if __name__ == '__main__':
-    print("Running clean up")
-    cleanup_old_attempts()
+    if len(sys.argv) > 1 and sys.argv[1] == '--clear-all':
+        print("Clearing all attempts")
+        clear_all_attempts()
+    else:
+        print("Running clean up")
+        cleanup_old_attempts()

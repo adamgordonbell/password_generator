@@ -94,13 +94,23 @@ def check_password() -> Any:
 @app.route('/attempts')
 def view_attempts() -> str:
     conn, cur = get_db()
+    
+    # Get recent high scores (top 5 in the last hour)
+    one_hour_ago = datetime.now() - timedelta(hours=1)
+    cur.execute('SELECT * FROM attempts WHERE timestamp > %s ORDER BY strength DESC LIMIT 5', (one_hour_ago,))
+    recent_high_scores = cur.fetchall()
+    
+    # Get recent attempts
     cur.execute('SELECT * FROM attempts ORDER BY timestamp DESC LIMIT 10')
     attempts = cur.fetchall()
+    
+    # Get all-time high scores
     cur.execute('SELECT * FROM attempts ORDER BY strength DESC LIMIT 5')
     high_scores = cur.fetchall()
+    
     cur.close()
     conn.close()
-    return render_template('attempts.html', attempts=attempts, high_scores=high_scores)
+    return render_template('attempts.html', recent_high_scores=recent_high_scores, attempts=attempts, high_scores=high_scores)
 
 def assess_password_strength(password: str) -> Tuple[Dict[str, int], List[Dict[str, Any]]]:
     strength = 0

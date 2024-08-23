@@ -11,3 +11,21 @@ run_local(){
     deactivate
 EOF
 }
+
+run_cleanup(){
+    echo "Running cleanup script"
+    railway shell << EOF
+    source venv/bin/activate
+    PGHOST=junction.proxy.rlwy.net PGPORT=59857 python cron/cleanup.py
+    deactivate
+EOF
+}
+
+clear_all_attempts(){
+    echo "Clearing all attempts"
+    railway shell << EOF
+    source venv/bin/activate
+    PGHOST=junction.proxy.rlwy.net PGPORT=59857 python cron/cleanup.py --clear-all
+    deactivate
+EOF
+}

@@ -1,6 +1,6 @@
 # Unnecessary Password Strength Checker
 
-This project is a humorous take on password strength checkers, implementing unnecessarily complex rules for password evaluation.
+This project is a humorous take on password strength checkers, using unnecessarily complex rules for password evaluation.
 
 ## Setup
 

@@ -15,9 +15,9 @@ But as any developer knows, building the app is only half the battle. Deploying 
 
 That's where this article comes in. I'm going to walk you through my experience deploying this over-engineered password checker using Railway, a platform I stumbled upon while searching for a way to simplify my deployment process. 
 
-### The Developer's Dilemma - Here
+### The Developer's Dilemma 
 
-Now the practical problem with bulding my app is where to actually host it and how to deploy it. Building the application itself wasn't the problem. Flask made it easy to create a web service, and Python's rich ecosystem provided all the tools I needed for the password checking logic. The real challenge lay in taking this local project and making it accessible to the world.
+Now the practical problem with building my app is where to actually host it and how to deploy it. Building the application itself wasn't the problem. Flask made it easy to create a web service, and Python's rich ecosystem provided all the tools I needed for the password checking logic. The real challenge lay in taking this local project and making it accessible to the world.
 
 My Flask development server wasn't going to cut it for production. I needed to set up a proper WSGI server like Gunicorn and configure it correctly. Then there was the database issue. While SQLite might work for local development, I needed a more robust solution for production. Setting up and managing a PostgreSQL database on a cloud platform seemed like overkill for this fun project.
 
@@ -173,7 +173,7 @@ The first step was to create a new project in Railway and connect it to my GitHu
 With the project set up, I needed to configure how Railway would build and run our application. A lot of this is done for me, using NIXPACKS. Instead of creating a dockerfile with a specific python version and then installing my requirements into it, most of this is autodetected by [NIXPACKS](https://nixpacks.com/docs/providers/python) and seems to work right off the bat.
 
 
-However, I do have some specific requirements I need to customize: I need to run a setup script and I need to use `gunicorn` to serve my flask app. I can change these in the railway UI but I decide to use the a config file (`railway.toml`) in my repo:
+However, I do have some specific requirements I need to customize: I need to run a setup script and I need to use `gunicorn` to serve my flask app. I can change these in the Railway UI but I decide to use the a config file (`railway.toml`) in my repo:
 
 ```toml
 [build]
@@ -193,7 +193,7 @@ And with that I can link my project by running `railway link` and then `railway 
 
 After watching the successful nixpack build and then deploy, I visit the provided URL ( passwordgenerator-production-11d0.up.railway.app) and get a 500 error.
 
-Thankfully, railway comes with a log montioring tab and there I see this:
+Thankfully, Railway comes with a log montioring tab and there I see this:
 
 ```
 psycopg2.OperationalError: FATAL:  database "your_database_name" does not exist
@@ -277,8 +277,8 @@ And CI/CD is already in place. I just push to my main branch to deploy to produc
 
 As I wrap up my little side project, it's clear to me how much modern operations practies can be a drag, both a drag on timelines and just mentally a process that isn't fun and drags down a side project. Man, it feels nice to not have to worry about all of those details!
 
-Even Railways use of NIXPACKs means I don't have to mess with any docker files or worry about the slow process I had with AWS of building images and pushing to ECR, then images being pulled from ECR and roll out. I mean, something similar is happening here, but I just dont' have to worry about it.
+Even Railway's use of NIXPACKs means I don't have to mess with any docker files or worry about the slow process I had with AWS of building images and pushing to ECR, then images being pulled from ECR and roll out. I mean, something similar is happening here, but I just dont' have to worry about it.
 
 The easy transition from a local Flask application to a live, database-backed web service meant I could spend more time building creative (albeit unnecessary) password strength rules and less time wrestling with deployment details.
 
-Here it is: [https://passwordgenerator-production-11d0.up.railway.app/](https://passwordgenerator-production-11d0.up.railway.app/). See if you can max out the scoring system and get on the score board. And stay tuned for my next project, where I may just use railway again.
+Here it is: [https://passwordgenerator-production-11d0.up.railway.app/](https://passwordgenerator-production-11d0.up.railway.app/). See if you can max out the scoring system and get on the score board. And stay tuned for my next project, where I may just use Railway again.

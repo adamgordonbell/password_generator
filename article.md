@@ -13,21 +13,21 @@ This Flask-based web application is a game where you attempt to defeat absurd pa
 
 But as any developer knows, building the app is only half the battle. Deploying it and keeping it up is the real challenge. How do you quickly go from a local Flask app to a live, database-backed web service without getting bogged down in infrastructure management?
 
-That's where this article comes in. I'm going to walk you through my experience deploying this over-engineered password checker using Railway, a platform I stumbled upon while searching for a way to simplify my deployment process. 
+That's where this article comes in. I will walk you through my experience deploying this over-engineered password checker using Railway, a platform I stumbled upon while searching for a way to simplify my deployment process. 
 
 ### The Developer's Dilemma 
 
-Now, the practical problem with building my app is where to actually host it and how to deploy it. Building the application itself wasn't the problem. Flask made it easy to create a web service, and Python's rich ecosystem provided all the tools I needed for the password-checking logic. The real challenge lay in taking this local project and making it accessible to the world.
+The practical problem with building my app is where to host it and how to deploy it. Building the application itself was fine. Flask made it easy to create a web service, and Python's rich ecosystem provided all the tools I needed for the password-checking logic. The real challenge lay in taking this local project and making it accessible to the world.
 
-My Flask development server wasn't going to cut it for production. I needed to set up a proper WSGI server like Gunicorn and configure it correctly. Then there was the database issue. While SQLite might work for local development, I needed a more robust solution for production. Setting up and managing a PostgreSQL database on a cloud platform seemed like overkill for this fun project.
+My Flask development server wasn't going to cut it for production. I needed to set up a proper WSGI server like Gunicorn and configure it correctly. Then there was the database issue. While SQLite might work for local development, I needed a more robust solution for production. Setting up and managing a PostgreSQL database on a cloud platform was overkill for this fun project.
 
 The cleanup script I had written needed to run regularly to manage the database size. This meant figuring out how to set up and manage cron jobs in a cloud environment. And let's not forget about environment management - keeping my development and production environments consistent was crucial, but managing environment variables and secrets across different setups can be a real headache.
 
-Then came the "what if" scenarios. What if my silly password checker suddenly went viral? I needed a solution that could scale without requiring a complete architecture overhaul. Ideally, I wanted my application to update automatically whenever I pushed changes to my repository, but setting up a robust CI/CD pipeline seemed like a project in itself.
+Then came the "what if" scenarios. What if my silly password checker suddenly went viral? I needed a solution that could scale without requiring a complete architecture overhaul. Ideally, I wanted my application to update automatically whenever I pushed changes to my repository, but setting up a robust CI/CD pipeline was a project in itself.
 
-And each of these challenges came with its own learning curve. While I'm always eager to learn, the prospect of navigating multiple complex systems just to deploy a fun project was daunting.
+And each of these challenges came with its own learning curve. While I'm always eager to learn, navigating multiple complex systems to deploy a fun project was daunting.
 
-The irony wasn't lost on me. Here I was, creating a tool to judge unnecessarily complex passwords while the process of running this thing – even just in the planning stage – was becoming unnecessarily complex itself. I found myself longing for a simpler solution. Something that would let me focus on the fun part - building my quirky password checker - without getting bogged down in the intricacies of cloud infrastructure management.
+The irony wasn't lost on me. Here I was, creating a tool to judge unnecessarily complex passwords while running this thing – even just in the planning stage – was becoming unnecessarily complex itself. I found myself longing for a more straightforward solution. Something that would let me focus on the fun part - building my quirky password checker - without getting bogged down in the intricacies of cloud infrastructure management.
 
 ### Discovering Railway: A Developer-Friendly Solution
 
@@ -158,7 +158,7 @@ fetch('/check_password', {
 
 This JavaScript code sends the password to our backend and updates the UI based on the response.
 
-This all works locally pretty well. Now, let's see about deploying it.
+This all works locally well. Now, let's see about deploying it.
 
 ### Deploying with Railway: A Step-by-Step Journey
 
@@ -183,7 +183,7 @@ builder = "NIXPACKS"
 startCommand = "python db_setup.py && gunicorn main:app"
 ```
 
-This tells Railway to use Nixpacks for building and to run the setup file on start. I also need to change my app to listen on `PORT`: 
+This tells Railway to use Nixpacks to build and run the setup file on start. I also need to change my app to listen on `PORT`: 
 ```Python
 if __name__ == '__main__':
     app.run(debug=False, port=int(os.getenv("PORT", default="5000")))
@@ -203,7 +203,7 @@ Oh yeah, the database! I need to set that up.
 
 #### Configuring the database
 
-Railway makes it easy to provision a PostgreSQL database, by dragging it into the design surface of project. Once I do that, I can see it exposes a number of ENVs for `PGHOST` and so on. Then, I can add these to my Flask app.
+Railway makes it easy to provision a PostgreSQL database, by dragging it into the design surface of project. Once I do that, I can see it exposes several ENVs for `PGHOST` and so on. Then, I can add these to my Flask app.
 
 <div style="display: flex; justify-content: space-between;">
     <img src="https://i.imgur.com/eqfK2jS.png" alt="Railway Database Setup" width="48%">
@@ -243,7 +243,7 @@ def cleanup_old_attempts():
     print(f"Cleanup complete. {deleted_count} entries removed.")
 ```
 
-To run this job on a schedule, I simply create a separate service in Railway with its own `Railway.toml` file:
+To run this job on a schedule, I create a separate service in Railway with its own `Railway.toml` file:
 
 ```toml
 [build]
@@ -254,7 +254,7 @@ startCommand = "python cleanup.py"
 cronSchedule = "55 * * * *"
 ```
 
-This tells Railway to run our cleanup script every hour at 55 minutes past the hour. I connected this service to the database as well, hit deploy, and everything was in place.
+This tells Railway to run our cleanup script every hour at 55 minutes past the hour. I also connected this service to the database, hit deploy, and everything was in place.
 
 <div style="display: flex; justify-content: space-between;">
     <img src="https://i.imgur.com/75Xlr1y.png" alt="Final Version" width="48%">
@@ -262,23 +262,23 @@ This tells Railway to run our cleanup script every hour at 55 minutes past the h
 
 #### Everything Else
 
-Now that I have my app deployed and working, this is when I'd usually turn my mind to all the important but tedious parts of rolling out a side project. Things like getting CI/CD in place, getting a log aggregating solution in place, and maybe setting up alerts so I know if this thing goes down or 'goes viral'.
+Now that I have my app deployed and working, this is when I'd usually turn my mind to all the essential but tedious parts of rolling out a side project. Things like getting CI/CD in place, getting a log aggregating solution in place, and setting up alerts so I know if this thing goes down or 'goes viral'.
 
-Thankfully, though, without really meaning to, just by choosing Railway, I have those covered. The log aggregation is built in. They are just tabs that are already set up. Same for metrics and an observability dashboard:
+Thankfully, though, without really meaning to, by choosing Railway, I have those covered. The log aggregation is built in. They are just tabs that are already set up. Same for metrics and an observability dashboard:
 
 <div style="display: flex; justify-content: space-between;">
     <img src="https://i.imgur.com/C7ONQFm.png" alt="Metrics 1" width="48%">
     <img src="https://i.imgur.com/gKoWMTC.png" alt="Metrics 2" width="48%">
 </div>
 
-And CI/CD is already in place. I just push to my main branch to deploy to production, and it's easy to set up other environments for local dev usage. Since this is just a side project, I'm running things locally pointed at the prod DB, using `railway shell` to provide the secrets, and it's working quite well.
+And CI/CD is already in place. I push to my main branch to deploy to production, and setting up other environments for local dev usage is easy. Since this is just a side project, I'm running things locally pointed at the prod DB, using `railway shell` to provide the secrets, and it's working quite well.
 
 ### Conclusion
 
-As I wrap up my little side project, it's clear to me how much modern operations practices can be a drag, both a drag on timelines and just mentally a process that isn't fun and drags down a side project. Man, it feels nice to not have to worry about all of those details!
+As I wrap up my little side project, it's clear to me how much modern operations practices can be a drag, both a drag on timelines and just mentally a process that isn't fun and drags down a side project. Man, it feels nice not to have to worry about those details!
 
-Even Railway's use of NIXPACKs means I don't have to mess with any docker files or worry about the slow process I had with AWS of building images and pushing them to ECR, then images being pulled from ECR and rolled out. I mean, something similar is happening here, but I just don't have to worry about it.
+Even Railway's use of NIXPACKs means I don't have to mess with any docker files or worry about my slow process with AWS of building images and pushing them to ECR, then images being pulled from ECR and rolled out. Something similar is happening here, but I don't have to worry about it.
 
 The easy transition from a local Flask application to a live, database-backed web service meant I could spend more time building creative (albeit unnecessary) password-strength rules and less time wrestling with deployment details.
 
-Here it is: [https://passwordgenerator-production-11d0.up.railway.app/](https://passwordgenerator-production-11d0.up.railway.app/). See if you can max out the scoring system and get on the scoreboard. And stay tuned for my next project, where I may just use Railway again.
+Here it is: [https://passwordgenerator-production-11d0.up.railway.app/](https://passwordgenerator-production-11d0.up.railway.app/). See if you can max out the scoring system and get on the scoreboard. And stay tuned for my next project, where I may use Railway again.

@@ -20,8 +20,7 @@ ASTROLOGICAL_SIGNS: List[str] = [
 EXTINCT_LANGUAGES: List[str] = [
     "Sumerian", "Akkadian", "Etruscan", "Gothic", "Old Norse", "Ancient Greek",
     "Latin", "Coptic", "Aramaic", "Ancient Egyptian", "Hittite", "Phoenician",
-    "Mayan", "Aztec", "Inca", "Old English", "Middle English", "Old French",
-    "Old High German", "Old Irish", "Tocharian", "Pictish", "Manx", "Cornish"
+    "Mayan", "Aztec", "Inca", "Tocharian", "Pictish", "Manx", "Cornish"
 ]
 
 def count_distinct_digits(password: str) -> int:
@@ -95,16 +94,13 @@ def check_password() -> Any:
 def view_attempts() -> str:
     conn, cur = get_db()
     
-    # Get recent high scores (top 5 in the last hour)
     one_hour_ago = datetime.now() - timedelta(hours=1)
     cur.execute('SELECT * FROM attempts WHERE timestamp > %s ORDER BY strength DESC LIMIT 5', (one_hour_ago,))
     recent_high_scores = cur.fetchall()
     
-    # Get recent attempts
     cur.execute('SELECT * FROM attempts ORDER BY timestamp DESC LIMIT 10')
     attempts = cur.fetchall()
     
-    # Get all-time high scores
     cur.execute('SELECT * FROM attempts ORDER BY strength DESC LIMIT 5')
     high_scores = cur.fetchall()
     
@@ -120,7 +116,7 @@ def assess_password_strength(password: str) -> Tuple[Dict[str, int], List[Dict[s
         {'message': "Contains a special character", 'met': 0, 'positive': True, 'hint': "Include at least one special character (e.g., !@#$%^&*).", 'points': 1},
         {'message': "Contains an uppercase letter", 'met': 0, 'positive': True, 'hint': "Include at least one uppercase letter.", 'points': 1},
         {'message': "Contains a prime number with 3 digits", 'met': 0, 'positive': True, 'hint': "Include a three-digit prime number (e.g., 101, 103, 107).", 'points': 3},
-        {'message': "Includes the name of an extinct language", 'met': 0, 'positive': True, 'hint': "Include the name of an extinct language (e.g., Sumerian, Gothic, Latin).", 'points': 4},
+        {'message': "Includes the name of an extinct language", 'met': 0, 'positive': True, 'hint': "Include the name of an extinct language (e.g., Sumerian, Latin).", 'points': 4},
         {'message': "Contains a valid chess move in algebraic notation", 'met': 0, 'positive': True, 'hint': "Include a valid chess move in algebraic notation (e.g., e4, Nf3, O-O).", 'points': 3},
         {'message': "Has a character from a different Unicode block", 'met': 0, 'positive': True, 'hint': "Lots to choose from: Hello☕й→世界123αβγちは", 'points': 3},
         {'message': "Contains an ASCII art owl", 'met': 0, 'positive': True, 'hint': " (e.g. (o.o), (O.O), or (°v°)).", 'points': 2},
